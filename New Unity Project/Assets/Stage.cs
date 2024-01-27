@@ -14,9 +14,9 @@ public class Stage : MonoBehaviour
 
     [Header("Game Settings")]
     [Range(4, 40)]
-    public int boardWidth = 14;
+    public int boardWidth = 12;
     [Range(5, 20)]
-    public int boardHeight = 20;
+    public int boardHeight = 22;
     public float fallCycle = 1.0f;
     private float nextFallTime;
 
@@ -63,7 +63,6 @@ public class Stage : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 moveDir.x = -1;
-
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
@@ -77,23 +76,6 @@ public class Stage : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
                 moveDir.y = -1;
-            }
-
-            if (moveDir != Vector3.zero || isRotate)
-            {
-                MoveTetromino(moveDir, isRotate);
-            }
-
-            if (Time.time > nextFallTime)
-            {
-                nextFallTime = Time.time + fallCycle;
-                moveDir = Vector3.down;
-                isRotate = false;
-            }
-
-            if (moveDir != Vector3.zero || isRotate)
-            {
-                MoveTetromino(moveDir, isRotate);
             }
 
             if (Input.GetKeyDown(KeyCode.Space))
