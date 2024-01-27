@@ -306,6 +306,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 504eb9628dca79647931324939118341, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tilePrefab: {fileID: 4540531777516839119, guid: c77abccc373076447a2390cc723eb0b0, type: 3}
+  backgroundNode: {fileID: 909750528}
+  boardNode: {fileID: 1810283820}
+  tetrominoNode: {fileID: 330233657}
+  gameoverPanel: {fileID: 0}
+  boardWidth: 10
+  boardHeight: 20
+  fallCycle: 1
 --- !u!4 &1740597487
 Transform:
   m_ObjectHideFlags: 0
