@@ -24,6 +24,11 @@ public class Stage : MonoBehaviour
     private int halfWidth;
     private int halfHeight;
 
+    private int Score = 0;
+    private int Level = 0;
+
+    private int nextMinoIndex = -1;
+
     private void Start()
     {
         gameoverPanel.SetActive(false);
@@ -109,9 +114,12 @@ public class Stage : MonoBehaviour
         {
             if (column.childCount == boardWidth)
             {
+                Score += 100;
+                fallCycle = 1 - (Score / 1500) * 0.1f;
+                Level=Score/1500;
                 foreach (Transform tile in column)
                 {
-                    Destroy(tile.gameObject);
+                   Destroy(tile.gameObject);
                 }
 
                 column.DetachChildren();
@@ -273,79 +281,161 @@ bool MoveTetromino(Vector3 moveDir, bool isRotate)
 
     void CreateTetromino()
     {
-        int index = Random.Range(0, 7);
-        Color32 color = Color.white;
-
-        curIndex = index;
-
-        tetrominoNode.rotation = Quaternion.identity;
-        tetrominoNode.position = new Vector2(0, halfHeight);
-
-        switch (index)
+        if (nextMinoIndex == -1)
         {
-            // I : ÇÏ´Ã»ö
-            case 0:
-                color = new Color32(115, 251, 253, 255);
-                CreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                break;
+            int index = Random.Range(0, 7);
+            nextMinoIndex= Random.Range(0, 7);
+            if (index == nextMinoIndex) nextMinoIndex++;
+            Color32 color = Color.white;
 
-            // J : ÆÄ¶õ»ö
-            case 1:
-                color = new Color32(0, 33, 245, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color);
-                break;
+            curIndex = index;
 
-            // L : ±Ö»ö
-            case 2:
-                color = new Color32(243, 168, 59, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 1.0f), color);
-                break;
+            tetrominoNode.rotation = Quaternion.identity;
+            tetrominoNode.position = new Vector2(0, halfHeight);
 
-            // O : ³ë¶õ»ö
-            case 3:
-                color = new Color32(255, 253, 84, 255);
-                CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 1f), color);
-                break;
+            switch (index)
+            {
+                // I : ÇÏ´Ã»ö
+                case 0:
+                    color = new Color32(115, 251, 253, 255);
+                    CreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    break;
 
-            // S : ³ì»ö
-            case 4:
-                color = new Color32(117, 250, 76, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, -1f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, -1f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                break;
+                // J : ÆÄ¶õ»ö
+                case 1:
+                    color = new Color32(0, 33, 245, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color);
+                    break;
 
-            // T : ÀÚÁÖ»ö
-            case 5:
-                color = new Color32(155, 47, 246, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                break;
+                // L : ±Ö»ö
+                case 2:
+                    color = new Color32(243, 168, 59, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 1.0f), color);
+                    break;
 
-            // Z : »¡°£»ö
-            case 6:
-                color = new Color32(235, 51, 35, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, 1f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                break;
+                // O : ³ë¶õ»ö
+                case 3:
+                    color = new Color32(255, 253, 84, 255);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 1f), color);
+                    break;
+
+                // S : ³ì»ö
+                case 4:
+                    color = new Color32(117, 250, 76, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, -1f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, -1f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    break;
+
+                // T : ÀÚÁÖ»ö
+                case 5:
+                    color = new Color32(155, 47, 246, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    break;
+
+                // Z : »¡°£»ö
+                case 6:
+                    color = new Color32(235, 51, 35, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 1f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    break;
+            }
+        }
+        else
+        {
+            int index = nextMinoIndex;
+            nextMinoIndex = Random.Range(0, 7);
+            if (index == nextMinoIndex) nextMinoIndex++;
+            Color32 color = Color.white;
+
+            curIndex = index;
+
+            tetrominoNode.rotation = Quaternion.identity;
+            tetrominoNode.position = new Vector2(0, halfHeight);
+
+            switch (index)
+            {
+                // I : ÇÏ´Ã»ö
+                case 0:
+                    color = new Color32(115, 251, 253, 255);
+                    CreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    break;
+
+                // J : ÆÄ¶õ»ö
+                case 1:
+                    color = new Color32(0, 33, 245, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color);
+                    break;
+
+                // L : ±Ö»ö
+                case 2:
+                    color = new Color32(243, 168, 59, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 1.0f), color);
+                    break;
+
+                // O : ³ë¶õ»ö
+                case 3:
+                    color = new Color32(255, 253, 84, 255);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 1f), color);
+                    break;
+
+                // S : ³ì»ö
+                case 4:
+                    color = new Color32(117, 250, 76, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, -1f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, -1f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    break;
+
+                // T : ÀÚÁÖ»ö
+                case 5:
+                    color = new Color32(155, 47, 246, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    break;
+
+                // Z : »¡°£»ö
+                case 6:
+                    color = new Color32(235, 51, 35, 255);
+                    CreateTile(tetrominoNode, new Vector2(-1f, 1f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    break;
+            }
         }
     }
-
 }
