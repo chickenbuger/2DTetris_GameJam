@@ -14,7 +14,7 @@ public class Stage : MonoBehaviour
 
     [Header("Game Settings")]
     [Range(4, 40)]
-    public int boardWidth = 10;
+    public int boardWidth = 14;
     [Range(5, 20)]
     public int boardHeight = 20;
     public float fallCycle = 1.0f;
@@ -25,6 +25,8 @@ public class Stage : MonoBehaviour
 
     private void Start()
     {
+        gameoverPanel.SetActive(false);
+
         halfWidth = Mathf.RoundToInt(boardWidth * 0.5f);
         halfHeight = Mathf.RoundToInt(boardHeight * 0.5f);
 
@@ -46,61 +48,72 @@ public class Stage : MonoBehaviour
 
     void Update()
     {
-        Vector3 moveDir = Vector3.zero;
-        bool isRotate = false;
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (gameoverPanel.activeSelf)
         {
-            moveDir.x = -1;
-
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            moveDir.x = 1;
-        }
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            isRotate = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            moveDir.y = -1;
-        }
-
-        if (moveDir != Vector3.zero || isRotate)
-        {
-            MoveTetromino(moveDir, isRotate);
-        }
-
-        if (Time.time > nextFallTime)
-        {
-            nextFallTime = Time.time + fallCycle;
-            moveDir = Vector3.down;
-            isRotate = false;
-        }
-
-        if (moveDir != Vector3.zero || isRotate)
-        {
-            MoveTetromino(moveDir, isRotate);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            while (MoveTetromino(Vector3.down, false))
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
+        else
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
-        }
+            Vector3 moveDir = Vector3.zero;
+            bool isRotate = false;
 
-        // 아래로 떨어지는 경우는 강제로 이동시킵니다.
-        if (Time.time > nextFallTime)
-        {
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                moveDir.x = -1;
 
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                moveDir.x = 1;
+            }
+
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                isRotate = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                moveDir.y = -1;
+            }
+
+            if (moveDir != Vector3.zero || isRotate)
+            {
+                MoveTetromino(moveDir, isRotate);
+            }
+
+            if (Time.time > nextFallTime)
+            {
+                nextFallTime = Time.time + fallCycle;
+                moveDir = Vector3.down;
+                isRotate = false;
+            }
+
+            if (moveDir != Vector3.zero || isRotate)
+            {
+                MoveTetromino(moveDir, isRotate);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                while (MoveTetromino(Vector3.down, false))
+                {
+                }
+            }
+
+            // 아래로 떨어지는 경우는 강제로 이동시킵니다.
+            if (Time.time > nextFallTime)
+            {
+                nextFallTime = Time.time + fallCycle;
+                moveDir = Vector3.down;
+                isRotate = false;
+            }
+            if (moveDir != Vector3.zero || isRotate)
+            {
+                MoveTetromino(moveDir, isRotate);
+            }
         }
     }
 
@@ -181,6 +194,10 @@ bool MoveTetromino(Vector3 moveDir, bool isRotate)
                 AddToBoard(tetrominoNode);
                 CheckBoardColumn();
                 CreateTetromino();
+                if (!CanMoveTo(tetrominoNode))
+                {
+                    gameoverPanel.SetActive(true);
+                }
             }
 
             return false;
