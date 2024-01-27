@@ -20,6 +20,7 @@ public class Stage : MonoBehaviour
     public float fallCycle = 1.0f;
     private float nextFallTime;
 
+    private int curIndex = -1;
     private int halfWidth;
     private int halfHeight;
 
@@ -60,20 +61,20 @@ public class Stage : MonoBehaviour
             Vector3 moveDir = Vector3.zero;
             bool isRotate = false;
 
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
             {
                 moveDir.x = -1;
             }
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
                 moveDir.x = 1;
             }
 
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
-                isRotate = true;
+                if(curIndex!=3) isRotate = true;
             }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
             {
                 moveDir.y = -1;
             }
@@ -274,6 +275,8 @@ bool MoveTetromino(Vector3 moveDir, bool isRotate)
     {
         int index = Random.Range(0, 7);
         Color32 color = Color.white;
+
+        curIndex = index;
 
         tetrominoNode.rotation = Quaternion.identity;
         tetrominoNode.position = new Vector2(0, halfHeight);
