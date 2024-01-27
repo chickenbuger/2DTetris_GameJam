@@ -4,17 +4,6 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    private void Awake()
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (spriteRenderer == null)
-        {
-            Debug.LogError("You need to SpriteRenderer for Block");
-        }
-    }
-    SpriteRenderer spriteRenderer;
-
     public Color color
     {
         set
@@ -38,6 +27,18 @@ public class Tile : MonoBehaviour
         get
         {
             return spriteRenderer.sortingOrder;
+        }
+    }
+
+    SpriteRenderer spriteRenderer;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer == null)
+        {
+            Debug.LogError("You need to SpriteRenderer for Block");
         }
     }
 }
