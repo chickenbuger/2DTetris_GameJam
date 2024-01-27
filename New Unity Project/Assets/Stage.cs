@@ -6,7 +6,10 @@ using UnityEngine;
 public class Stage : MonoBehaviour
 {
     [Header("Editor Objects")]
-    public GameObject tilePrefab;
+    public GameObject BacktilePrefab;
+    public GameObject WaillTilePrefab;
+    public GameObject NomailtilePrefab;
+
     public Transform backgroundNode;
     public Transform boardNode;
     public Transform tetrominoNode;
@@ -20,8 +23,14 @@ public class Stage : MonoBehaviour
     public float fallCycle = 1.0f;
     private float nextFallTime;
 
+    private int curIndex = -1;
     private int halfWidth;
     private int halfHeight;
+
+    private int Score = 0;
+    private int Level = 0;
+
+    private int nextMinoIndex = -1;
 
     private void Start()
     {
@@ -41,9 +50,7 @@ public class Stage : MonoBehaviour
             col.transform.parent = boardNode;
         }
 
-
         CreateTetromino();
-    
     }
 
     void Update()
@@ -60,20 +67,20 @@ public class Stage : MonoBehaviour
             Vector3 moveDir = Vector3.zero;
             bool isRotate = false;
 
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
             {
                 moveDir.x = -1;
             }
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
                 moveDir.x = 1;
             }
 
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
-                isRotate = true;
+                if (curIndex != 3) isRotate = true;
             }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
             {
                 moveDir.y = -1;
             }
@@ -108,6 +115,9 @@ public class Stage : MonoBehaviour
         {
             if (column.childCount == boardWidth)
             {
+                Score += 100;
+                fallCycle = 1 - (Score / 1500) * 0.1f;
+                Level = Score / 1500;
                 foreach (Transform tile in column)
                 {
                     Destroy(tile.gameObject);
@@ -154,8 +164,7 @@ public class Stage : MonoBehaviour
         }
     }
 
-
-bool MoveTetromino(Vector3 moveDir, bool isRotate)
+    bool MoveTetromino(Vector3 moveDir, bool isRotate)
     {
         Vector3 oldPos = tetrominoNode.transform.position;
         Quaternion oldRot = tetrominoNode.transform.rotation;
@@ -227,9 +236,34 @@ bool MoveTetromino(Vector3 moveDir, bool isRotate)
         return true;
 
     }
-    Tile CreateTile(Transform parent, Vector2 position, Color color, int order = 1)
+    //백그라운드 생성 타일
+    Tile BackCreateTile(Transform parent, Vector2 position, Color color, int order = 1)
     {
-        var go = Instantiate(tilePrefab);
+        var go = Instantiate(BacktilePrefab);
+        go.transform.parent = parent;
+        go.transform.localPosition = position;
+
+        var tile = go.GetComponent<Tile>();
+        tile.color = color;
+        tile.sortingOrder = order;
+
+        return tile;
+    }
+    // 밑에 생성 타일
+    Tile WaillCreateTile(Transform parent, Vector2 position, Color color, int order = 1)
+    {
+        var go = Instantiate(WaillTilePrefab);
+        go.transform.parent = parent;
+        go.transform.localPosition = position;
+
+        var tile = go.GetComponent<Tile>();
+        tile.color = color;
+        tile.sortingOrder = order;
+
+        return tile;
+    }    Tile NomailCreateTile(Transform parent, Vector2 position, Color color, int order = 1)
+    {
+        var go = Instantiate(NomailtilePrefab);
         go.transform.parent = parent;
         go.transform.localPosition = position;
 
@@ -240,9 +274,10 @@ bool MoveTetromino(Vector3 moveDir, bool isRotate)
         return tile;
     }
 
+
+
     void CreateBackground()
     {
-
         Color color = Color.gray;
 
         // 타일 보드
@@ -251,7 +286,7 @@ bool MoveTetromino(Vector3 moveDir, bool isRotate)
         {
             for (int y = halfHeight; y > -halfHeight; --y)
             {
-                CreateTile(backgroundNode, new Vector2(x, y), color, 0);
+                BackCreateTile(backgroundNode, new Vector2(x, y), color, 0);
             }
         }
 
@@ -259,90 +294,174 @@ bool MoveTetromino(Vector3 moveDir, bool isRotate)
         color.a = 1.0f;
         for (int y = halfHeight; y > -halfHeight; --y)
         {
-            CreateTile(backgroundNode, new Vector2(-halfWidth - 1, y), color, 0);
-            CreateTile(backgroundNode, new Vector2(halfWidth, y), color, 0);
+            WaillCreateTile(backgroundNode, new Vector2(-halfWidth - 1, y), color, 0);
+            WaillCreateTile(backgroundNode, new Vector2(halfWidth, y), color, 0);
         }
 
         // 아래 테두리
         for (int x = -halfWidth - 1; x <= halfWidth; ++x)
         {
-            CreateTile(backgroundNode, new Vector2(x, -halfHeight), color, 0);
+            WaillCreateTile(backgroundNode, new Vector2(x, -halfHeight), color, 0);
         }
     }
 
     void CreateTetromino()
     {
-        int index = Random.Range(0, 7);
-        Color32 color = Color.white;
-
-        tetrominoNode.rotation = Quaternion.identity;
-        tetrominoNode.position = new Vector2(0, halfHeight);
-
-        switch (index)
+        if (nextMinoIndex == -1)
         {
-            // I : 하늘색
-            case 0:
-                color = new Color32(115, 251, 253, 255);
-                CreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                break;
+            int index = Random.Range(0, 7);
+            nextMinoIndex= Random.Range(0, 7);
+            if (index == nextMinoIndex) nextMinoIndex++;
+            Color32 color = Color.white;
 
-            // J : 파란색
-            case 1:
-                color = new Color32(0, 33, 245, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color);
-                break;
+            curIndex = index;
 
-            // L : 귤색
-            case 2:
-                color = new Color32(243, 168, 59, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 1.0f), color);
-                break;
+            tetrominoNode.rotation = Quaternion.identity;
+            tetrominoNode.position = new Vector2(0, halfHeight);
 
-            // O : 노란색
-            case 3:
-                color = new Color32(255, 253, 84, 255);
-                CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 1f), color);
-                break;
+            switch (index)
+            {
+                // I : 하늘색
+                case 0:
+                    color = new Color32(115, 251, 253, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    break;
 
-            // S : 녹색
-            case 4:
-                color = new Color32(117, 250, 76, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, -1f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, -1f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                break;
+                // J : 파란색
+                case 1:
+                    color = new Color32(0, 33, 245, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color);
+                    break;
 
-            // T : 자주색
-            case 5:
-                color = new Color32(155, 47, 246, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                break;
+                // L : 귤색
+                case 2:
+                    color = new Color32(243, 168, 59, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1.0f), color);
+                    break;
 
-            // Z : 빨간색
-            case 6:
-                color = new Color32(235, 51, 35, 255);
-                CreateTile(tetrominoNode, new Vector2(-1f, 1f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                CreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                CreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                break;
+                // O : 노란색
+                case 3:
+                    color = new Color32(255, 253, 84, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1f), color);
+                    break;
+
+                // S : 녹색
+                case 4:
+                    color = new Color32(117, 250, 76, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, -1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, -1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    break;
+
+                // T : 자주색
+                case 5:
+                    color = new Color32(155, 47, 246, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    break;
+
+                // Z : 빨간색
+                case 6:
+                    color = new Color32(235, 51, 35, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    break;
+            }
+        }
+        else
+        {
+            int index = nextMinoIndex;
+            nextMinoIndex = Random.Range(0, 7);
+            if (index == nextMinoIndex) nextMinoIndex++;
+            Color32 color = Color.white;
+
+            curIndex = index;
+
+            tetrominoNode.rotation = Quaternion.identity;
+            tetrominoNode.position = new Vector2(0, halfHeight);
+
+            switch (index)
+            {
+                // I : 하늘색
+                case 0:
+                    color = new Color32(115, 251, 253, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    break;
+
+                // J : 파란색
+                case 1:
+                    color = new Color32(0, 33, 245, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color);
+                    break;
+
+                // L : 귤색
+                case 2:
+                    color = new Color32(243, 168, 59, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1.0f), color);
+                    break;
+
+                // O : 노란색
+                case 3:
+                    color = new Color32(255, 253, 84, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1f), color);
+                    break;
+
+                // S : 녹색
+                case 4:
+                    color = new Color32(117, 250, 76, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, -1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, -1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    break;
+
+                // T : 자주색
+                case 5:
+                    color = new Color32(155, 47, 246, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    break;
+
+                // Z : 빨간색
+                case 6:
+                    color = new Color32(235, 51, 35, 255);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    break;
+            }
         }
     }
-
 }
