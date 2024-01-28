@@ -17,9 +17,9 @@ public class Stage : MonoBehaviour
 
     [Header("Game Settings")]
     [Range(4, 40)]
-    public int boardWidth = 12;
+    public int boardWidth = 10;
     [Range(5, 20)]
-    public int boardHeight = 22;
+    public int boardHeight = 20;
     public float fallCycle = 1.0f;
     private float nextFallTime;
 
@@ -73,7 +73,7 @@ public class Stage : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
-                moveDir.x = 1;
+                moveDir.x = 1f;
             }
 
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
@@ -221,7 +221,7 @@ public class Stage : MonoBehaviour
             int x = Mathf.RoundToInt(node.transform.position.x + halfWidth);
             int y = Mathf.RoundToInt(node.transform.position.y + halfHeight - 1);
 
-            if (x < 0 || x > boardWidth - 1)
+            if (x < -0.0f || x > boardWidth - 2)
                 return false;
 
             if (y < 0)
@@ -261,7 +261,9 @@ public class Stage : MonoBehaviour
         tile.sortingOrder = order;
 
         return tile;
-    }    Tile NomailCreateTile(Transform parent, Vector2 position, Color color, int order = 1)
+    }    
+    
+    Tile NomailCreateTile(Transform parent, Vector2 position, Color color, int order = 1)
     {
         var go = Instantiate(NomailtilePrefab);
         go.transform.parent = parent;
@@ -281,25 +283,25 @@ public class Stage : MonoBehaviour
         Color color = Color.gray;
 
         // 타일 보드
-        color.a = 0.5f;
+        color.a = 0.0f;
         for (int x = -halfWidth; x < halfWidth; ++x)
         {
-            for (int y = halfHeight; y > -halfHeight; --y)
+            for (int y = halfHeight; y >= -halfHeight; --y)
             {
                 BackCreateTile(backgroundNode, new Vector2(x, y), color, 0);
             }
         }
 
         // 좌우 테두리
-        color.a = 1.0f;
-        for (int y = halfHeight; y > -halfHeight; --y)
+        color.a = 0.0f;
+        for (int y = halfHeight; y >= -halfHeight; --y)
         {
-            WaillCreateTile(backgroundNode, new Vector2(-halfWidth - 1, y), color, 0);
+            WaillCreateTile(backgroundNode, new Vector2(-halfWidth - 1.0f, y), color, 0);
             WaillCreateTile(backgroundNode, new Vector2(halfWidth, y), color, 0);
         }
 
         // 아래 테두리
-        for (int x = -halfWidth - 1; x <= halfWidth; ++x)
+        for (int x = -halfWidth - 1 ; x <= halfWidth; ++x)
         {
             WaillCreateTile(backgroundNode, new Vector2(x, -halfHeight), color, 0);
         }
