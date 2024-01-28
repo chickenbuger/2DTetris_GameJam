@@ -8,7 +8,6 @@ public class GameStart : MonoBehaviour
 {
     public Image fadePanel;
     public float fadeDuration = 0.5f;
-    public float delayTime = 3;
     void Update()
     {
         // 아무 키나 눌렸을 때
@@ -20,11 +19,10 @@ public class GameStart : MonoBehaviour
 
     private IEnumerator Next()
     {
-        yield return new WaitForSeconds(delayTime);
         fadePanel.gameObject.SetActive(true);
         FadeOut();
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         SceneManager.LoadScene("SampleScene");
     }
 

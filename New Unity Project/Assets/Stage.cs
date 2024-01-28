@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Stage : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class Stage : MonoBehaviour
     public Transform boardNode;
     public Transform tetrominoNode;
     public GameObject gameoverPanel;
+
+    public AudioSource Delete;
 
     [Header("Game Settings")]
     [Range(4, 40)]
@@ -30,13 +33,21 @@ public class Stage : MonoBehaviour
     private int halfWidth;
     private int halfHeight;
 
-    private int Score = 0;
-    private int Level = 0;
+    public int Score = 0;
+    public int Level = 1;
+
+    public Text ScoreText;
+    public Text LevelText;
+    public Text GameOverScoreText;
 
     private int nextMinoIndex = -1;
 
     private void Start()
     {
+        ScoreText.text = "0";
+        GameOverScoreText.text = "0";
+        LevelText.text = "Lv.1";
+
         gameoverPanel.SetActive(false);
 
         halfWidth = Mathf.RoundToInt(boardWidth * 0.5f);
@@ -62,7 +73,7 @@ public class Stage : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+                UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
             }
         }
         else
@@ -107,6 +118,11 @@ public class Stage : MonoBehaviour
                 MoveTetromino(moveDir, isRotate);
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
+        }
     }
 
     void CheckBoardColumn()
@@ -119,11 +135,14 @@ public class Stage : MonoBehaviour
             if (column.childCount == boardWidth)
             {
                 Score += 100;
+                ScoreText.text = Score.ToString(); // 텍스트로 점수 표시
                 fallCycle = 1 - (Score / 1500) * 0.1f;
-                Level = Score / 1500;
+                Level = Score / 1500 + 1;
+                LevelText.text = "Lv."+ Level.ToString(); // 텍스트로 레벨 표시
                 foreach (Transform tile in column)
                 {
                     Destroy(tile.gameObject);
+                    Delete.Play(); // 제거 사운드
                 }
 
                 column.DetachChildren();
@@ -188,8 +207,9 @@ public class Stage : MonoBehaviour
                 AddToBoard(tetrominoNode);
                 CheckBoardColumn();
                 CreateTetromino();
-                if (!CanMoveTo(tetrominoNode))
+                if (!CanMoveTo(tetrominoNode)) // 게임 오버 기능
                 {
+                    ScoreText.gameObject.SetActive(false);
                     gameoverPanel.SetActive(true);
                 }
             }
