@@ -21,6 +21,9 @@ public class Stage : MonoBehaviour
     [Range(5, 20)]
     public int boardHeight = 20;
     public float fallCycle = 1.0f;
+
+    [SerializeField] private Sprite[] ArraySprite;
+
     private float nextFallTime;
 
     private int curIndex = -1;
@@ -326,64 +329,64 @@ public class Stage : MonoBehaviour
                 // I : ÇÏ´Ã»ö
                 case 0:
                     color = new Color32(115, 251, 253, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color).SpriteApply(ArraySprite[0]);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color).SpriteApply(ArraySprite[1]);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color).SpriteApply(ArraySprite[2]);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color).SpriteApply(ArraySprite[3]);
                     break;
 
                 // J : ÆÄ¶õ»ö
                 case 1:
                     color = new Color32(0, 33, 245, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color).SpriteApply(ArraySprite[20]);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color).SpriteApply(ArraySprite[22]);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color).SpriteApply(ArraySprite[23]);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color).SpriteApply(ArraySprite[21]); ;
                     break;
 
                 // L : ±Ö»ö
                 case 2:
                     color = new Color32(243, 168, 59, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color).SpriteApply(ArraySprite[24]);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color).SpriteApply(ArraySprite[25]);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color).SpriteApply(ArraySprite[26]);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1.0f), color).SpriteApply(ArraySprite[27]);
                     break;
 
                 // O : ³ë¶õ»ö
                 case 3:
                     color = new Color32(255, 253, 84, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color).SpriteApply(ArraySprite[13]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color).SpriteApply(ArraySprite[11]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color).SpriteApply(ArraySprite[14]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1f), color).SpriteApply(ArraySprite[12]); ;
                     break;
 
                 // S : ³ì»ö
                 case 4:
                     color = new Color32(117, 250, 76, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, -1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, -1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, -1f), color).SpriteApply(ArraySprite[9]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, -1f), color).SpriteApply(ArraySprite[8]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color).SpriteApply(ArraySprite[11]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color).SpriteApply(ArraySprite[10]); ;
                     break;
 
                 // T : ÀÚÁÖ»ö
                 case 5:
                     color = new Color32(155, 47, 246, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0f), color).SpriteApply(ArraySprite[16]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color).SpriteApply(ArraySprite[18]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color).SpriteApply(ArraySprite[17]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color).SpriteApply(ArraySprite[19]); ;
                     break;
 
                 // Z : »¡°£»ö
                 case 6:
                     color = new Color32(235, 51, 35, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1f), color).SpriteApply(ArraySprite[7]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color).SpriteApply(ArraySprite[6]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color).SpriteApply(ArraySprite[5]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color).SpriteApply(ArraySprite[4]); ;
                     break;
             }
         }
@@ -404,64 +407,64 @@ public class Stage : MonoBehaviour
                 // I : ÇÏ´Ã»ö
                 case 0:
                     color = new Color32(115, 251, 253, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color).SpriteApply(ArraySprite[0]);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color).SpriteApply(ArraySprite[1]);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color).SpriteApply(ArraySprite[2]);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color).SpriteApply(ArraySprite[3]);
                     break;
 
                 // J : ÆÄ¶õ»ö
                 case 1:
                     color = new Color32(0, 33, 245, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color).SpriteApply(ArraySprite[20]);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color).SpriteApply(ArraySprite[22]);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color).SpriteApply(ArraySprite[23]);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color).SpriteApply(ArraySprite[21]); ;
                     break;
 
                 // L : ±Ö»ö
                 case 2:
                     color = new Color32(243, 168, 59, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1.0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color).SpriteApply(ArraySprite[24]);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0.0f), color).SpriteApply(ArraySprite[25]);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0.0f), color).SpriteApply(ArraySprite[26]);
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1.0f), color).SpriteApply(ArraySprite[27]);
                     break;
 
                 // O : ³ë¶õ»ö
                 case 3:
                     color = new Color32(255, 253, 84, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color).SpriteApply(ArraySprite[13]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color).SpriteApply(ArraySprite[11]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color).SpriteApply(ArraySprite[14]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 1f), color).SpriteApply(ArraySprite[12]); ;
                     break;
 
                 // S : ³ì»ö
                 case 4:
                     color = new Color32(117, 250, 76, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, -1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, -1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, -1f), color).SpriteApply(ArraySprite[9]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, -1f), color).SpriteApply(ArraySprite[8]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color).SpriteApply(ArraySprite[11]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color).SpriteApply(ArraySprite[10]); ;
                     break;
 
                 // T : ÀÚÁÖ»ö
                 case 5:
                     color = new Color32(155, 47, 246, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 0f), color).SpriteApply(ArraySprite[16]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color).SpriteApply(ArraySprite[18]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color).SpriteApply(ArraySprite[17]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color).SpriteApply(ArraySprite[19]); ;
                     break;
 
                 // Z : »¡°£»ö
                 case 6:
                     color = new Color32(235, 51, 35, 255);
-                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color);
-                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color);
+                    NomailCreateTile(tetrominoNode, new Vector2(-1f, 1f), color).SpriteApply(ArraySprite[7]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 1f), color).SpriteApply(ArraySprite[6]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(0f, 0f), color).SpriteApply(ArraySprite[5]); ;
+                    NomailCreateTile(tetrominoNode, new Vector2(1f, 0f), color).SpriteApply(ArraySprite[4]); ;
                     break;
             }
         }

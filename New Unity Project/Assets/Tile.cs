@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    public SpriteRenderer m_spriteRender;
+
+    private void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();   
+        if(null==spriteRenderer)
+        {
+            spriteRenderer= gameObject.AddComponent<SpriteRenderer>();
+        }
+    }
     public Color color
     {
         set
@@ -14,6 +24,23 @@ public class Tile : MonoBehaviour
         get
         {
             return spriteRenderer.color;
+        }
+    }
+
+    public void SpriteApply(string spriteName)
+    {
+        Sprite sprite = Resources.Load<Sprite>(spriteName);
+        if(null!=sprite) 
+        {
+            spriteRenderer.sprite = sprite;
+        }
+    }
+
+    public void SpriteApply(Sprite _sprite)
+    {
+        if(null!=_sprite) 
+        {
+            spriteRenderer.sprite = _sprite;
         }
     }
 
