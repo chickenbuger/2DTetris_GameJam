@@ -16,7 +16,7 @@ public class Stage : MonoBehaviour
     public Transform tetrominoNode;
     public GameObject gameoverPanel;
 
-    public AudioSource Delete;
+    public AudioSource Delete; 
 
     [Header("Game Settings")]
     [Range(4, 40)]
@@ -244,7 +244,7 @@ public class Stage : MonoBehaviour
             int x = Mathf.RoundToInt(node.transform.position.x + halfWidth);
             int y = Mathf.RoundToInt(node.transform.position.y + halfHeight - 1);
 
-            if (x < -0.0f || x > boardWidth - 2)
+            if (x < -0.0f || x > boardWidth - 3)
                 return false;
 
             if (y < 0)
