@@ -18,7 +18,11 @@ public class Stage : MonoBehaviour
 
     public AudioSource Delete; 
 
-    [Header("Game Settings")]
+    /** Board의 크기를 설정하는 위치 -> Range를 통한 범위 설정을함
+    * 앞으로 여러 모양의 맵을 제작하는 데 있어서 가장 중요한 설정이 되는 부분
+    * 특정 값을 기준으로 크기 조절이 가능한 함수 제작 필요
+    */
+    [Header("Game Settings")] 
     [Range(4, 40)]
     public int boardWidth = 10;
     [Range(5, 20)]
@@ -42,6 +46,14 @@ public class Stage : MonoBehaviour
 
     private int nextMinoIndex = -1;
 
+    /**
+     * 기본 세팅
+     * 보드 크기의 절반(너비, 높이)를 저장
+     * 다음 블록의 떨어지는 시간 설정
+     * 배경 생성
+     * 보드 높이를 기반으로 판정을 해주는 boardNode와 연결
+     * 테트리스 블록 생성
+     */
     private void Start()
     {
         ScoreText.text = "0";
@@ -50,7 +62,7 @@ public class Stage : MonoBehaviour
 
         gameoverPanel.SetActive(false);
 
-        halfWidth = Mathf.RoundToInt(boardWidth * 0.5f);
+        halfWidth = Mathf.RoundToInt(boardWidth * 0.5f); 
         halfHeight = Mathf.RoundToInt(boardHeight * 0.5f);
 
         nextFallTime = Time.time + fallCycle;
@@ -67,6 +79,10 @@ public class Stage : MonoBehaviour
         CreateTetromino();
     }
 
+    /**
+     * 키 바인딩
+     * 회전 유무, 이동 방향을 저장하여 MoveTotermino 함수로 해당 값을 전달
+     */
     void Update()
     {
         if (gameoverPanel.activeSelf)
@@ -125,6 +141,12 @@ public class Stage : MonoBehaviour
         }
     }
 
+    /**
+     * 데이터가 한 줄이 찼는지 확인
+     * BoardNode의 데이터(column)의 데이터 개수만큼 foreach
+     * childcount == boardWidth -> 한 줄이 가득 참
+     * 지운 뒤 위에 블록들 후속처리
+     */
     void CheckBoardColumn()
     {
         bool isCleared = false;
@@ -186,6 +208,12 @@ public class Stage : MonoBehaviour
         }
     }
 
+    /**
+     * 이동 가능 여부 체크
+     * 기존 위치 저장 
+     * 현재 값 이동 시켜보기, 회전 시키기(오일러를 이용하여 한 방향으로 돌림)
+     * 이동이 가능한다면 true 불가능하다면 이전 위치로 이동 후 만약 바닥에 닿았다면 보드에 추가
+     */
     bool MoveTetromino(Vector3 moveDir, bool isRotate)
     {
         Vector3 oldPos = tetrominoNode.transform.position;
@@ -235,7 +263,7 @@ public class Stage : MonoBehaviour
         }
     }
 
-    // 이동 가능한지 체크
+    // 이동 가능한지 체크(범위에 들었는지 이동할 위치에 데이터가 있는지 체크)
     bool CanMoveTo(Transform root)
     {
         for (int i = 0; i < root.childCount; ++i)
@@ -330,6 +358,12 @@ public class Stage : MonoBehaviour
         }
     }
 
+    //테트리스 생성
+    /**
+     * 임시로 다음블록을 미리 알기위해서 nextMinoIndex사용(첫 함수 실행시에만 Random을 두 번 사용)
+     * 이후는 next값을 받아서 사용하며 next값은 Random으로 다음 값을 받는다.
+     * 나온 index값을 기준으로 Tile을 소환(뒤는 sprite를 적용하기위하여 사용)
+     */
     void CreateTetromino()
     {
         if (nextMinoIndex == -1)
